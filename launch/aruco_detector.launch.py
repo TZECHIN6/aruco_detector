@@ -9,12 +9,12 @@ def generate_launch_description():
     usb_cam_config_file = os.path.join(pkg_share, 'config', 'usb_cam_params.yaml')
 
     return LaunchDescription([
-        Node(
-            package='usb_cam',
-            executable='usb_cam_node_exe',
-            parameters=[usb_cam_config_file],
-            output='screen'
-        ),
+        # Node(
+        #     package='usb_cam',
+        #     executable='usb_cam_node_exe',
+        #     parameters=[usb_cam_config_file],
+        #     output='screen'
+        # ),
         Node(
             package='aruco_detector',
             executable='aruco_detector',

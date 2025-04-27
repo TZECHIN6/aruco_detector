@@ -16,7 +16,7 @@ class ArucoDetector(Node):
         self.bridge = CvBridge()
         self.aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
         self.aruco_params = cv2.aruco.DetectorParameters_create()
-        self.marker_size = 0.072  # Marker size in meters (adjust based on your marker)
+        self.marker_size = 0.2  # Marker size in meters (adjust based on your marker)
 
         # Camera parameters
         self.camera_matrix = None
@@ -24,9 +24,9 @@ class ArucoDetector(Node):
 
         # Subscribers
         self.image_sub = self.create_subscription(
-            Image, '/image_raw', self.image_callback, 10)
+            Image, '/world/ugv_uav_world/model/X3/link/base_link/sensor/camera_front/image', self.image_callback, 10)
         self.info_sub = self.create_subscription(
-            CameraInfo, '/camera_info', self.info_callback, 10)
+            CameraInfo, '/world/ugv_uav_world/model/X3/link/base_link/sensor/camera_front/camera_info', self.info_callback, 10)
 
         # Publisher
         self.pose_pub = self.create_publisher(PoseStamped, '/aruco_pose', 10)
@@ -70,7 +70,7 @@ class ArucoDetector(Node):
                     # Create pose message
                     pose_msg = PoseStamped()
                     pose_msg.header = msg.header
-                    pose_msg.header.frame_id = 'camera_frame'
+                    pose_msg.header.frame_id = 'X3/base_link/camera_front'
                     pose_msg.pose.position.x = float(tvec[0])
                     pose_msg.pose.position.y = float(tvec[1])
                     pose_msg.pose.position.z = float(tvec[2])
@@ -89,7 +89,7 @@ class ArucoDetector(Node):
                     # Publish visualization marker
                     marker_msg = Marker()
                     marker_msg.header = msg.header
-                    marker_msg.header.frame_id = 'camera_frame'
+                    marker_msg.header.frame_id = 'X3/base_link/camera_front'
                     marker_msg.type = Marker.CUBE
                     marker_msg.action = Marker.ADD
                     marker_msg.pose = pose_msg.pose
@@ -106,7 +106,7 @@ class ArucoDetector(Node):
                     # Publish TF transform
                     t = TransformStamped()
                     t.header = msg.header
-                    t.header.frame_id = 'camera_frame'
+                    t.header.frame_id = 'X3/base_link/camera_front'
                     t.child_frame_id = 'aruco_frame'
                     t.transform.translation.x = float(tvec[0])
                     t.transform.translation.y = float(tvec[1])
